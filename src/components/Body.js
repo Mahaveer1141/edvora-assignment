@@ -2,6 +2,7 @@ import { Icon, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import styles from "../../styles/Body.module.css";
 import CustomTab from "./CustomTab";
 import { BsFilterLeft } from "react-icons/bs";
+import BodyItem from "./BodyItem";
 
 function Body() {
   return (
@@ -17,9 +18,20 @@ function Body() {
           </div>
         </TabList>
         <TabPanels mt="24px" color="#fff">
-          <TabPanel p={0}>First</TabPanel>
-          <TabPanel p={0}>Seocnd</TabPanel>
-          <TabPanel p={0}>Third</TabPanel>
+          <TabPanel p={0}>
+            <BodyItem />
+            <BodyItem />
+            <BodyItem />
+            <BodyItem />
+            <BodyItem />
+            <BodyItem />
+          </TabPanel>
+          <TabPanel p={0}>
+            <BodyItem />
+          </TabPanel>
+          <TabPanel p={0}>
+            <BodyItem />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </div>
