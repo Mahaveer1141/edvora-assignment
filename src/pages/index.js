@@ -7,30 +7,23 @@ const homeStyle = {
   paddingBottom: "15px",
 };
 
-function Home({ user, rides }) {
-  console.log(rides);
-
+function Home({ user }) {
   return (
     <div style={homeStyle}>
       <Navbar user={user} />
-      <Body />
+      <Body userStationCode={user.station_code} />
     </div>
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const user = await (
     await fetch("https://assessment.api.vweb.app/user")
-  ).json();
-
-  const rides = await (
-    await fetch("https://assessment.api.vweb.app/rides")
   ).json();
 
   return {
     props: {
       user,
-      rides,
     },
   };
 }

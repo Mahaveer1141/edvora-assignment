@@ -1,34 +1,44 @@
 import styles from "../../styles/BodyItem.module.css";
 import Image from "next/image";
-import Map from "./Map.jpeg";
+import { getStationPath } from "../util";
 
-function BodyItem() {
+function BodyItem({ ride }) {
   return (
     <div className={styles.container}>
       <div>
-        <Image className={styles.map} width={290} height={160} src={Map} />
+        <Image
+          unoptimized={true}
+          className={styles.map}
+          width={290}
+          height={160}
+          src={ride.map_url}
+        />
       </div>
       <div className={styles.rideinfo}>
         <div className={styles.ridedata}>
-          <span>Ride Id : </span>002
+          <span>Ride Id : </span>
+          {ride.id}
         </div>
         <div className={styles.ridedata}>
-          <span>Origin Station : </span>20
+          <span>Origin Station : </span>
+          {ride.origin_station_code}
         </div>
         <div className={styles.ridedata}>
           <span>station_path : </span>
-          [20, 39, 40, 42, 54, 63, 72, 88, 98]
+          {getStationPath(ride)}
         </div>
         <div className={styles.ridedata}>
-          <span>Date : </span>15th Feb 2022 16:33
+          <span>Date : </span>
+          {ride.date}
         </div>
         <div className={styles.ridedata}>
-          <span>Distance : </span>0
+          <span>Distance : </span>
+          {ride.distance}
         </div>
       </div>
       <div className={styles.place}>
-        <span className={styles.city}>City Name</span>
-        <span>State Name</span>
+        <span className={styles.city}>{ride.city}</span>
+        <span>{ride.state}</span>
       </div>
     </div>
   );

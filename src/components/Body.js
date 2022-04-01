@@ -10,21 +10,51 @@ import {
   PopoverHeader,
   PopoverBody,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import styles from "../../styles/Body.module.css";
 import CustomTab from "./CustomTab";
 import { BsFilterLeft } from "react-icons/bs";
 import BodyItem from "./BodyItem";
 import { MdArrowDropDown } from "react-icons/md";
+import { useEffect, useState } from "react";
+import {
+  getDistance,
+  getPastRides,
+  getUpcomingRides,
+  sortedRides,
+} from "../util";
 
-function Body() {
+function Body({ userStationCode }) {
+  const [rides, setRides] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const response = await (
+        await fetch("https://assessment.api.vweb.app/rides")
+      ).json();
+      setRides(sortedRides(response, userStationCode));
+    })();
+  }, []);
+
+  if (rides === undefined) {
+    return (
+      <div className={styles.loader}>
+        <Spinner color="white" />;
+      </div>
+    );
+  }
+
+  const upcoming = getUpcomingRides(rides, userStationCode);
+  const past = getPastRides(rides, userStationCode);
+
   return (
     <div className={styles.bodymain}>
       <Tabs>
         <TabList color="#d0cbcb" borderBottom="none">
           <CustomTab title="Nearest Rides" />
-          <CustomTab title="Upcoming Rides (6)" />
-          <CustomTab title="Past Rides (3)" />
+          <CustomTab title={`Upcoming Rides (${upcoming.length})`} />
+          <CustomTab title={`Past Rides (${past.length})`} />
           <div className={styles.filter}>
             <Icon mr="8px" as={BsFilterLeft} />
             <Popover>
@@ -63,18 +93,25 @@ function Body() {
         </TabList>
         <TabPanels mt="24px" color="#fff">
           <TabPanel p={0}>
-            <BodyItem />
-            <BodyItem />
-            <BodyItem />
-            <BodyItem />
-            <BodyItem />
-            <BodyItem />
+            {rides.map((ride, key) => (
+              <div key={key}>
+                <BodyItem ride={ride} />
+              </div>
+            ))}
           </TabPanel>
           <TabPanel p={0}>
-            <BodyItem />
+            {upcoming.map((ride, key) => (
+              <div key={key}>
+                <BodyItem ride={ride} />
+              </div>
+            ))}
           </TabPanel>
           <TabPanel p={0}>
-            <BodyItem />
+            {past.map((ride, key) => (
+              <div key={key}>
+                <BodyItem ride={ride} />
+              </div>
+            ))}
           </TabPanel>
         </TabPanels>
       </Tabs>

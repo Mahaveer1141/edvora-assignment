@@ -8,6 +8,7 @@ function Navbar({ user }) {
       <div className={styles.user}>
         <span className={styles.username}>{user.name}</span>
         <Image
+          unoptimized={true}
           height={44}
           width={44}
           src={user.url}
