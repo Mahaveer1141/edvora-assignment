@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import {
   getCitiesByState,
   getPastRides,
+  getRides,
   getStates,
   getUpcomingRides,
   sortedRides,
@@ -48,10 +49,8 @@ function Body({ userStationCode }) {
     );
   }
 
-  console.log(currentState, currentCity);
-
-  const upcoming = getUpcomingRides(rides, userStationCode);
-  const past = getPastRides(rides, userStationCode);
+  const upcoming = getRides(getUpcomingRides(rides), currentState, currentCity);
+  const past = getRides(getPastRides(rides), currentState, currentCity);
   const states = getStates(rides);
 
   return (
@@ -71,7 +70,10 @@ function Body({ userStationCode }) {
                 <PopoverHeader color="#A5A5A5">Filters</PopoverHeader>
                 <PopoverBody p={0}>
                   <Select
-                    onChange={(e) => setCurrentState(e.target.value)}
+                    onChange={(e) => {
+                      setCurrentState(e.target.value);
+                      setCurrentCity("");
+                    }}
                     value={currentState}
                     icon={<MdArrowDropDown />}
                     mt="10px"
@@ -107,7 +109,7 @@ function Body({ userStationCode }) {
         </TabList>
         <TabPanels mt="24px" color="#fff">
           <TabPanel p={0}>
-            {rides.map((ride, key) => (
+            {getRides(rides, currentState, currentCity).map((ride, key) => (
               <div key={key}>
                 <BodyItem ride={ride} />
               </div>

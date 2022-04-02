@@ -1,3 +1,13 @@
+export function getRides(rides, state, city) {
+  if (city !== "") {
+    return getRidesByCity(rides, city);
+  }
+  if (state !== "") {
+    return getRidesByState(rides, state);
+  }
+  return rides;
+}
+
 export function getStationPath(ride) {
   let response = "[";
   response += ride.station_path.toString();
@@ -25,28 +35,36 @@ export function getDistance(ride, userStationCode) {
   return distance;
 }
 
-export function getUpcomingRides(rides, userStationCode) {
+export function getUpcomingRides(rides) {
   let upcoming = [];
-  for (let i = 0; i < rides.length; i++) {
-    if (new Date(rides[i].date) > Date.now()) upcoming.push(rides[i]);
-  }
-  return sortedRides(upcoming, userStationCode);
+  const currentDate = Date.now();
+  rides.forEach((ride) => {
+    if (new Date(ride.date) > currentDate) upcoming.push(ride);
+  });
+  upcoming.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+  return upcoming;
 }
 
-export function getPastRides(rides, userStationCode) {
+export function getPastRides(rides) {
   let past = [];
-  for (let i = 0; i < rides.length; i++) {
-    if (new Date(rides[i].date) < Date.now()) past.push(rides[i]);
-  }
-  return sortedRides(past, userStationCode);
+  const currentDate = Date.now();
+  rides.forEach((ride) => {
+    if (new Date(ride.date) < currentDate) past.push(ride);
+  });
+  past.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+  return past;
 }
 
 export function sortedRides(rides, userStationCode) {
   let sorted = [];
-  for (let i = 0; i < rides.length; i++) {
-    const distance = getDistance(rides[i], userStationCode);
-    sorted.push({ distance, ...rides[i] });
-  }
+  rides.forEach((ride) => {
+    const distance = getDistance(ride, userStationCode);
+    sorted.push({ distance, ...ride });
+  });
   sorted.sort((a, b) => {
     return a.distance - b.distance;
   });
@@ -78,7 +96,7 @@ export function getRidesByState(rides, state) {
   rides.forEach((ride) => {
     if (ride.state === state) ridesByState.push(ride);
   });
-  return sortedRides(ridesByState);
+  return ridesByState;
 }
 
 export function getRidesByCity(rides, city) {
@@ -86,5 +104,5 @@ export function getRidesByCity(rides, city) {
   rides.forEach((ride) => {
     if (ride.city === city) ridesByCity.push(ride);
   });
-  return sortedRides(ridesByCity);
+  return ridesByCity;
 }
