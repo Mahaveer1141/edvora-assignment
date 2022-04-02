@@ -1,11 +1,12 @@
 import styles from "../../styles/Navbar.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 function Navbar({ user }) {
   return (
     <div className={styles.nav}>
       <div className={styles.name}>
-        <a href="/">Edvora</a>
+        <Link href="/">Edvora</Link>
       </div>
       <div className={styles.user}>
         <span className={styles.username}>{user.name}</span>
