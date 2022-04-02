@@ -4,7 +4,9 @@ import Image from "next/image";
 function Navbar({ user }) {
   return (
     <div className={styles.nav}>
-      <div className={styles.name}>Edvora</div>
+      <div className={styles.name}>
+        <a href="/">Edvora</a>
+      </div>
       <div className={styles.user}>
         <span className={styles.username}>{user.name}</span>
         <Image
