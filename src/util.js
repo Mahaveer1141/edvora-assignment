@@ -52,3 +52,39 @@ export function sortedRides(rides, userStationCode) {
   });
   return sorted;
 }
+
+export function getStates(rides) {
+  let states = [];
+  rides.forEach((ride) => {
+    if (!states.includes(ride.state)) states.push(ride.state);
+  });
+  states.sort();
+  return states;
+}
+
+export function getCitiesByState(rides, state) {
+  let cities = [];
+  rides.forEach((ride) => {
+    if (!cities.includes(ride.city) && ride.state === state) {
+      cities.push(ride.city);
+    }
+  });
+  cities.sort();
+  return cities;
+}
+
+export function getRidesByState(rides, state) {
+  let ridesByState = [];
+  rides.forEach((ride) => {
+    if (ride.state === state) ridesByState.push(ride);
+  });
+  return sortedRides(ridesByState);
+}
+
+export function getRidesByCity(rides, city) {
+  let ridesByCity = [];
+  rides.forEach((ride) => {
+    if (ride.city === city) ridesByCity.push(ride);
+  });
+  return sortedRides(ridesByCity);
+}

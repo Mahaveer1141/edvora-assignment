@@ -19,14 +19,17 @@ import BodyItem from "./BodyItem";
 import { MdArrowDropDown } from "react-icons/md";
 import { useEffect, useState } from "react";
 import {
-  getDistance,
+  getCitiesByState,
   getPastRides,
+  getStates,
   getUpcomingRides,
   sortedRides,
 } from "../util";
 
 function Body({ userStationCode }) {
   const [rides, setRides] = useState();
+  const [currentState, setCurrentState] = useState("");
+  const [currentCity, setCurrentCity] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -45,8 +48,11 @@ function Body({ userStationCode }) {
     );
   }
 
+  console.log(currentState, currentCity);
+
   const upcoming = getUpcomingRides(rides, userStationCode);
   const past = getPastRides(rides, userStationCode);
+  const states = getStates(rides);
 
   return (
     <div className={styles.bodymain}>
@@ -65,26 +71,34 @@ function Body({ userStationCode }) {
                 <PopoverHeader color="#A5A5A5">Filters</PopoverHeader>
                 <PopoverBody p={0}>
                   <Select
+                    onChange={(e) => setCurrentState(e.target.value)}
+                    value={currentState}
                     icon={<MdArrowDropDown />}
                     mt="10px"
                     bg="#232323"
                     variant="filled"
                     placeholder="State"
                   >
-                    <option>Rajsthan</option>
-                    <option>Haryana</option>
-                    <option>Punjab</option>
+                    {states.map((state, key) => (
+                      <option key={key} value={state}>
+                        {state}
+                      </option>
+                    ))}
                   </Select>
                   <Select
+                    onChange={(e) => setCurrentCity(e.target.value)}
+                    value={currentCity}
                     icon={<MdArrowDropDown />}
                     mt="10px"
                     bg="#232323"
                     variant="filled"
                     placeholder="City"
                   >
-                    <option>Jaipur</option>
-                    <option>Delhi</option>
-                    <option>Mumbai</option>
+                    {currentState !== ""
+                      ? getCitiesByState(rides, currentState).map(
+                          (city, key) => <option key={key}>{city}</option>
+                        )
+                      : null}
                   </Select>
                 </PopoverBody>
               </PopoverContent>
